@@ -1,12 +1,15 @@
 package homepath
 
-import org.junit.Assert.assertEquals
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
+import java.util.concurrent.TimeUnit
 
 class NarrowTest {
-    @Ignore
-    @Test(timeout = 1000)
+    @Test
+    @Disabled
+    @Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
     fun recursiveNaive() {
         testSome { narrowRecursive(it) }
     }

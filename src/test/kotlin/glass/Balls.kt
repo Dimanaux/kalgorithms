@@ -1,7 +1,7 @@
 package glass
 
-import junit.framework.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class Balls {
     @Test
@@ -17,8 +17,8 @@ class Balls {
             104 to 104
         ).forEach { (height, expected) ->
                 assertEquals(
-                    "throwsCount($height, 1)",
-                    expected, throwsCount(height, 1)
+                    expected, throwsCount(height, 1),
+                    "throwsCount($height, 1)"
                 )
             }
     }
@@ -36,8 +36,8 @@ class Balls {
             104 to 14
         ).forEach { (height, expected) ->
             assertEquals(
-                "throwsCount($height, 2)",
-                expected, throwsCount(height, 2)
+                expected, throwsCount(height, 2),
+                "throwsCount($height, 2)"
             )
         }
     }
@@ -55,8 +55,8 @@ class Balls {
             104 to 9
         ).forEach { (height, expected) ->
             assertEquals(
-                "throwsCount($height, 3)",
-                expected, throwsCount(height, 3)
+                expected, throwsCount(height, 3),
+                "throwsCount($height, 3)"
             )
         }
     }

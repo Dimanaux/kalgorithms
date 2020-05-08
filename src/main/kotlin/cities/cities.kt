@@ -1,30 +1,67 @@
 package cities
 
-class Cities(val cities: Set<String>) {
-    private val graph = mutableMapOf<String, List<String>>()
+import java.util.*
+import kotlin.collections.ArrayList
 
-    init {
-        // KAZAN, NIL, LOS-ANGELES, SAMARA
-        // { KAZAN: [NIL], NIL: [LOS-ANGELES], LOS-ANGELES: [SAMARA], SAMARA: [] }
-        cities.forEach { predecessor ->
-            graph[predecessor] = cities.filter { successor ->
-                predecessor.last() == successor.first() && predecessor != successor
+/**
+ * Find first suitable city
+ */
+fun first(cities: Set<String>, graph: Map<Char, MutableSet<String>>): Char {
+    val firstCandidates = cities.map(String::first).toSet() - cities.map(String::last)
+    return firstCandidates.firstOrNull() ?: graph.keys.first()
+}
+
+/**
+ * Map has no empty sets
+ */
+fun MutableMap<Char, MutableSet<String>>.notEmpty() : Boolean {
+    for ((_, set) in this) {
+        if (set.isNotEmpty()) {
+            return true
+        }
+    }
+    return false
+}
+
+fun cities(cities: Set<String>): List<String> {
+    val graph: MutableMap<Char, MutableSet<String>> = mutableMapOf()
+    for (city in cities) {
+        graph.putIfAbsent(city.first(), mutableSetOf())
+        graph[city.first()]!!.add(city)
+    }
+
+    val tempStack = LinkedList<String>()
+    val game = ArrayList<String>(cities.size)
+
+    var currentNode = first(cities, graph)
+
+    do {
+        val adjacent = graph[currentNode]
+        val next = adjacent?.firstOrNull()
+
+        // if unexplored adjacent nodes present
+        if (next != null) {
+            // remember it
+            tempStack.push(next)
+            // mark as explored
+            adjacent.remove(next)
+            // proceed to this node
+            currentNode = next.last()
+        } else {
+            if (tempStack.isEmpty()) {
+                break
             }
+            // step back
+            val trapeze = tempStack.pop()
+            // this is the last known node of way out
+            game.add(trapeze)
+            currentNode = trapeze.first()
         }
-    }
+    } while (graph.notEmpty())
 
-    fun play(): List<String>? {
-        val firstCandidates = cities.toMutableSet()
-        for ((_, successors) in graph) {
-            firstCandidates.removeAll(successors)
-        }
-        var predecessor = firstCandidates.firstOrNull() ?: graph.keys.first()
-        while (graph.isNotEmpty()) {
-        }
-        return TODO()
+    // add remembered note to map
+    while (tempStack.isNotEmpty()) {
+        game.add(tempStack.pop())
     }
-
-    private fun nextFor(predecessor: String) {
-
-    }
+    return game.reversed()
 }
